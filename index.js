@@ -31,7 +31,7 @@ exports.handler = (event, context, callback) => {
         }
         sns.publish({
                 Message: message,
-                TopicArn: process.env.TOPIC_ARN;
+                TopicArn: process.env.TOPIC_ARN
             },
             function(err, data) {
               if (err) {
