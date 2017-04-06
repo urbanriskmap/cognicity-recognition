@@ -23,7 +23,6 @@ exports.handler = (event, context, callback) => {
     };
 
     rekognition.detectLabels(params).promise().then(function(data) {
-        var message = process.env.BASE_URL +srcKey.replace("originals/","")+" , ";
         var labels = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
         for (var i = 0; i < data.Labels.length; i++) {
           labels[i] = data.Labels[i].Name;
