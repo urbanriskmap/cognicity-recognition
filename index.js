@@ -25,43 +25,44 @@ exports.handler = (event, context, callback) => {
     rekognition.detectLabels(params).promise().then(function(data) {
         var labels = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
         for (var i = 0; i < data.Labels.length; i++) {
-          labels[i] = data.Labels[i].Name;
+          labels[i] = {"label": { "S": data.Labels[i].Name }, "confidence": { "N": data.Labels.Confidence }};
         }
+
         dynamodb.putItem({
             "TableName": "image-analysis",
             "Item": {
                 "image": {
                     "S": srcKey.replace('.jpg','')
                 },
-                "label1": {
-                    "S": labels[0]
+                "label1"
+                  "M": labels[0]
                 },
                 "label2": {
-                    "S": labels[1]
+                    "M": labels[1]
                 },
                 "label3": {
-                    "S": labels[2]
+                    "M": labels[2]
                 },
                 "label4": {
-                    "S": labels[3]
+                    "M": labels[3]
                 },
                 "label5": {
-                    "S": labels[4]
+                    "M": labels[4]
                 },
                 "label6": {
-                    "S": labels[5]
+                    "M": labels[5]
                 },
                 "label7": {
-                    "S": labels[6]
+                    "M": labels[6]
                 },
                 "label8": {
-                    "S": labels[7]
+                    "M": labels[7]
                 },
                 "label9": {
-                    "S": labels[8]
+                    "M": labels[8]
                 },
                 "label10": {
-                    "S": labels[9]
+                    "M": labels[9]
                 }
             }
         }, function(err, data) {
