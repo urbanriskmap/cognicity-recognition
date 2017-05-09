@@ -23,48 +23,27 @@ exports.handler = (event, context, callback) => {
     };
 
     rekognition.detectLabels(params).promise().then(function(data) {
-        var labels = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
+        var labels = [];
+        for (var i = 0; i < 10; i++) {
+          labels[i] = {"label": { "S": " " }, "confidence": { "N": "0" }};
+        }
+
+        var item = {};
+        item["image"] = { "S": srcKey.replace('.tif','').replace('.TIF','').replace('.jpg','').replace('.JPG','').replace('.png','') };
+
         for (var i = 0; i < data.Labels.length; i++) {
-          labels[i] = {"label": { "S": data.Labels[i].Name }, "confidence": { "N": data.Labels.Confidence }};
+          item["label"+String(i)] = { "S": data.Labels[i].Name };
+          item["confidence"+String(i)] = { "N": String(data.Labels[i].Confidence) };
+        }
+
+        for (var i = data.Labels.length; i < 10; i++) {
+          item["label"+String(i)] = { "S": " " };
+          item["confidence"+String(i)] = { "N": "0" };
         }
 
         dynamodb.putItem({
             "TableName": "image-analysis",
-            "Item": {
-                "image": {
-                    "S": srcKey.replace('.jpg','')
-                },
-                "label1"
-                  "M": labels[0]
-                },
-                "label2": {
-                    "M": labels[1]
-                },
-                "label3": {
-                    "M": labels[2]
-                },
-                "label4": {
-                    "M": labels[3]
-                },
-                "label5": {
-                    "M": labels[4]
-                },
-                "label6": {
-                    "M": labels[5]
-                },
-                "label7": {
-                    "M": labels[6]
-                },
-                "label8": {
-                    "M": labels[7]
-                },
-                "label9": {
-                    "M": labels[8]
-                },
-                "label10": {
-                    "M": labels[9]
-                }
-            }
+            "Item": item
         }, function(err, data) {
             if (err) {
                 console.log('ERROR: Dynamo failed: ' + err);
