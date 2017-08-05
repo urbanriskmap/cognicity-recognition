@@ -1,10 +1,11 @@
 const util = require('util');
 const AWS = require('aws-sdk');
-const rekognition = new AWS.Rekognition();
+
 const sns = new AWS.SNS();
 
 // use separate region for rekognition due to limited region availability
 AWS.config.rekognition = { endpoint: 'rekognition.us-west-2.amazonaws.com' };
+const rekognition = new AWS.Rekognition();
 
 exports.handler = (event, context, callback) => {
     console.log("Reading input from event:\n", util.inspect(event, {depth: 5}));
